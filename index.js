@@ -1,15 +1,28 @@
-const express = require('express')
-const app = express()
-const port = 5000
+const express = require("express");
+const cors = require("cors");
+const mongoose = require("mongoose");
+require("dotenv").config();
+mongoose.set("strictQuery", false);
+const app = express();
+const {hanleUser} = require("./controllers/user")
 
-app.get('/',(req,res)=>{
-      res.send("<h1>Hello world</h1>")
-})
+//middleware
+app.use(cors());
+app.use(express.json());
 
-app.get('/login',(req,res)=>{
-    res.send("<h2>This is my first server</h2>")
-})
+//connect to database
+mongoose
+  .connect("mongodb://localhost:27017/practice_Db")
+  .then(() => console.log("connected"))
+  .catch((err) => console.log(err));
 
-app.listen(port,()=>{
-    console.log(`server is running on port ${port}`)
-})
+//routes
+app.get("/profile/:username",hanleUser)
+
+
+
+//server listening
+const PORT = 5001;
+app.listen(PORT, () => {
+  console.log(`server listing on port ${PORT}`);
+});
